@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context="com.example.ExoSampleAct">
+
+        <com.google.android.exoplayer2.ui.PlayerView
+            android:id="@+id/player_view1"
+            android:layout_width="match_parent"
+            android:layout_height="200dp" />
+
+        <com.google.android.exoplayer2.ui.PlayerControlView
+            android:id="@+id/exo_controller"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp" />
+
+
+        <com.google.android.exoplayer2.ui.StyledPlayerControlView
+            android:id="@+id/pay_control"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginTop="20dp" />
+
+
+        <com.google.android.exoplayer2.ui.StyledPlayerView
+            android:id="@+id/player_view2"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginTop="20dp"
+            app:show_shuffle_button="true"
+            app:show_subtitle_button="true" />
+
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

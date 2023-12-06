@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <!--  FloatLayout start -->
+    <declare-styleable name="QMUIFloatLayout">
+        <attr name="android:gravity" />
+        <attr name="qmui_childHorizontalSpacing" format="dimension" />
+        <attr name="qmui_childVerticalSpacing" format="dimension" />
+        <attr name="android:maxLines" />
+        <attr name="qmui_maxNumber" format="integer" />
+    </declare-styleable>
+    <!--  FloatLayout end -->
+    <declare-styleable name="AppLoadingLayout">
+        <attr name="loading_img" format="reference" />
+        <attr name="loading_text_color" format="color" />
+        <attr name="loading_text" format="string" />
+    </declare-styleable>
+</resources>

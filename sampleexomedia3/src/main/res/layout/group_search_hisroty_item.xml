@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.AppCompatTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/tv_hisroty_1"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="6dp"
+    android:layout_marginBottom="8dp"
+    android:background="#D32A2A"
+    android:gravity="center"
+    android:maxLines="1"
+    android:padding="8dp"
+    android:paddingStart="14dp"
+    android:paddingEnd="14dp"
+    android:textColor="#9096BB"
+    android:textSize="14sp"
+    tools:text="历史1" />

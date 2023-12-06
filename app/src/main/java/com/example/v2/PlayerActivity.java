@@ -1,25 +1,9 @@
-/*
- * Copyright (C) 2016 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.example.v2;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.telephony.mbms.DownloadRequest;
 import android.util.Pair;
 import android.view.KeyEvent;
 import android.view.View;
@@ -36,13 +20,9 @@ import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.MediaMetadata;
 import com.google.android.exoplayer2.PlaybackException;
 import com.google.android.exoplayer2.Player;
-import com.google.android.exoplayer2.RenderersFactory;
 import com.google.android.exoplayer2.Tracks;
 import com.google.android.exoplayer2.audio.AudioAttributes;
-import com.google.android.exoplayer2.drm.DefaultDrmSessionManagerProvider;
 import com.google.android.exoplayer2.drm.FrameworkMediaDrm;
-import com.google.android.exoplayer2.source.DefaultMediaSourceFactory;
-import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.ui.StyledPlayerView;
 import com.google.android.exoplayer2.util.ErrorMessageProvider;
 import com.google.android.exoplayer2.util.EventLogger;
@@ -57,8 +37,6 @@ import java.util.List;
  *
  */
 public class PlayerActivity extends AppCompatActivity implements OnClickListener, StyledPlayerView.ControllerVisibilityListener {
-
-
     protected StyledPlayerView playerView;
     protected @Nullable ExoPlayer player;
 
@@ -67,7 +45,6 @@ public class PlayerActivity extends AppCompatActivity implements OnClickListener
     private boolean startAutoPlay;
     private int startItemIndex;
     private long startPosition;
-
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -162,7 +139,6 @@ public class PlayerActivity extends AppCompatActivity implements OnClickListener
     }
 
     // Activity input
-
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         // See whether the player view wants to handle media or DPAD keys events.
@@ -177,13 +153,11 @@ public class PlayerActivity extends AppCompatActivity implements OnClickListener
     }
 
     // PlayerView.ControllerVisibilityListener implementation
-
     @Override
     public void onVisibilityChanged(int visibility) {
     }
 
     // Internal methods
-
     protected void setContentView() {
         setContentView(R.layout.player_activity);
     }
@@ -193,7 +167,6 @@ public class PlayerActivity extends AppCompatActivity implements OnClickListener
      */
     protected boolean initializePlayer() {
         if (player == null) {
-
             mediaItems = createMediaItems();
             if (mediaItems.isEmpty()) {
                 return false;
@@ -251,11 +224,10 @@ public class PlayerActivity extends AppCompatActivity implements OnClickListener
             updateStartPosition();
             player.release();
             player = null;
-            playerView.setPlayer(/* player= */ null);
+            playerView.setPlayer(null);
             mediaItems = Collections.emptyList();
         }
     }
-
 
     private void updateStartPosition() {
         if (player != null) {

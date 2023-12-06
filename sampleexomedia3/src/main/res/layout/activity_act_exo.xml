@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".act.ActExo">
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_local"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="播放本地视频" />
+
+            <Button
+                android:id="@+id/btn_play"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="播放" />
+
+            <Button
+                android:id="@+id/btn_pause"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="暂停" />
+
+            <Button
+                android:id="@+id/btn_frag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="进入Fragment" />
+
+            <com.example.zzt.sampleexomedia3.view.AppLoadingLayoutLive
+                android:id="@+id/ll_load"
+                android:layout_width="90dp"
+                android:layout_height="100dp"
+                app:loading_text="加载中......." />
+
+            <LinearLayout
+                android:id="@+id/ll_next"
+                android:layout_width="90dp"
+                android:layout_height="100dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/exo_styled_controls_next" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="9dp"
+                    android:text="下一课"
+                    android:textColor="@color/white"
+                    android:textSize="13sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <androidx.media3.ui.PlayerView
+        android:id="@+id/player_view_1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:player_layout_id="@layout/exo_player_view_v2"
+        app:show_buffering="always"
+        app:use_controller="true" />
+
+
+</LinearLayout>

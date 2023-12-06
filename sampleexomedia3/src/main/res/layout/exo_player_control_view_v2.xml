@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 0dp dimensions are used to prevent this view from influencing the size of
+         the parent view if it uses "wrap_content". It is expanded to occupy the
+         entirety of the parent in code, after the parent's size has been
+         determined. See: https://github.com/google/ExoPlayer/issues/8726.
+    -->
+    <View
+        android:id="@id/exo_controls_background"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/exo_black_opacity_60" />
+
+    <FrameLayout
+        android:id="@id/exo_bottom_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/exo_styled_bottom_bar_height"
+        android:layout_gravity="bottom"
+        android:layout_marginTop="@dimen/exo_styled_bottom_bar_margin_top"
+        android:background="@color/exo_bottom_bar_background"
+        android:layoutDirection="ltr">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|start"
+            android:layoutDirection="ltr"
+            android:paddingStart="@dimen/exo_styled_bottom_bar_time_padding"
+            android:paddingLeft="@dimen/exo_styled_bottom_bar_time_padding"
+            android:paddingEnd="@dimen/exo_styled_bottom_bar_time_padding"
+            android:paddingRight="@dimen/exo_styled_bottom_bar_time_padding">
+
+            <!--播放暂停按钮-->
+            <ImageButton
+                android:id="@id/exo_play_pause"
+                style="@style/ExoStyledControls.Button.Center.PlayPause"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <!--播放时间-->
+            <TextView
+                android:id="@id/exo_position"
+                style="@style/ExoStyledControls.TimeText.Position"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="0" />
+            <!--拖拽进度条-->
+            <androidx.media3.ui.DefaultTimeBar
+                android:id="@id/exo_progress"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+            <!--视频时长-->
+            <TextView
+                android:id="@id/exo_duration"
+                style="@style/ExoStyledControls.TimeText.Duration"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="0" />
+        </LinearLayout>
+    </FrameLayout>
+</merge>

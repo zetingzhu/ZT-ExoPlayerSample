@@ -2,9 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FABD06"
     android:orientation="vertical"
     tools:context=".act.ActExo">
 
@@ -73,7 +73,10 @@
     <androidx.media3.ui.PlayerView
         android:id="@+id/player_view_1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#0A29EC"
+        app:artwork_display_mode="fill"
+        app:default_artwork="@drawable/artwork_placeholder"
         app:player_layout_id="@layout/exo_player_view_v2"
         app:show_buffering="always"
         app:use_controller="true" />

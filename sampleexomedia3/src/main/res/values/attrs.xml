@@ -16,4 +16,6 @@
         <attr name="loading_text_color" format="color" />
         <attr name="loading_text" format="string" />
     </declare-styleable>
+
+
 </resources>

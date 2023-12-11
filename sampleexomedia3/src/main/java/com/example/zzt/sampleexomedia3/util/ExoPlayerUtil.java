@@ -1,10 +1,13 @@
 package com.example.zzt.sampleexomedia3.util;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.Build;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,13 +20,17 @@ import androidx.media3.common.MediaItem;
 import androidx.media3.common.PlaybackException;
 import androidx.media3.common.Player;
 import androidx.media3.common.Timeline;
+import androidx.media3.common.VideoSize;
 import androidx.media3.common.util.UnstableApi;
 import androidx.media3.common.util.Util;
 import androidx.media3.exoplayer.DefaultLivePlaybackSpeedControl;
 import androidx.media3.exoplayer.ExoPlayer;
 import androidx.media3.exoplayer.drm.FrameworkMediaDrm;
 import androidx.media3.exoplayer.util.EventLogger;
+import androidx.media3.ui.AspectRatioFrameLayout;
 import androidx.media3.ui.PlayerView;
+
+import com.example.zzt.sampleexomedia3.imp.PlayStateChangedListener;
 
 /**
  * @author: zeting
@@ -62,9 +69,34 @@ public class ExoPlayerUtil implements DefaultLifecycleObserver {
      */
     private long startPosition;
 
+    /**
+     * 全屏按钮
+     */
+    private ImageView fullScreenButton;
+
+    /**
+     * 加载对话框
+     */
+    private View loadingView;
+
+    /**
+     * 播放状态监听
+     */
+    private PlayStateChangedListener playStateChangedListener;
+
+    @OptIn(markerClass = UnstableApi.class)
     public ExoPlayerUtil(Context mContext, PlayerView playerView) {
         this.mContext = mContext;
         this.playerView = playerView;
+
+        /**
+         * 设置绑定之后就设置视图默认横宽比，不让视图显示最高视图
+         */
+        AspectRatioFrameLayout aspectRatioFrameLayout = playerView.findViewById(androidx.media3.ui.R.id.exo_content_frame);
+        if (aspectRatioFrameLayout != null) {
+            // 设置一个默认，不然视图一开始就全屏显示
+            aspectRatioFrameLayout.setAspectRatio(1.778F);
+        }
     }
 
     public MediaItem getCurrentMediaItem() {
@@ -81,6 +113,30 @@ public class ExoPlayerUtil implements DefaultLifecycleObserver {
     }
 
     /**
+     * 设置播放地址
+     *
+     * @param url
+     */
+    public void setCurrentMediaItemToPlayer(String url) {
+        if (!TextUtils.isEmpty(url)) {
+            MediaItem mediaItem = MediaItem.fromUri(url);
+            setCurrentMediaItemToPlayer(mediaItem);
+        }
+    }
+
+    /**
+     * 设置播放地址
+     *
+     * @param url
+     */
+    public void setCurrentMediaItemToPlayer(Uri url) {
+        if (url != null) {
+            MediaItem mediaItem = MediaItem.fromUri(url);
+            setCurrentMediaItemToPlayer(mediaItem);
+        }
+    }
+
+    /**
      * 设置视频，并且播放
      *
      * @param currentMediaItem
@@ -88,11 +144,9 @@ public class ExoPlayerUtil implements DefaultLifecycleObserver {
     public void setCurrentMediaItemToPlayer(MediaItem currentMediaItem) {
         this.currentMediaItem = checkCreateMediaItems(currentMediaItem);
         clearStartPosition();
-        if (Build.VERSION.SDK_INT > 23) {
-            initializePlayer();
-            if (playerView != null) {
-                playerView.onResume();
-            }
+        initializePlayer();
+        if (playerView != null) {
+            playerView.onResume();
         }
     }
 
@@ -166,6 +220,44 @@ public class ExoPlayerUtil implements DefaultLifecycleObserver {
         }
     }
 
+    @Nullable
+    public ExoPlayer getPlayer() {
+        return player;
+    }
+
+    /**
+     * 获取播放状态
+     *
+     * @return
+     */
+    public boolean isPlaying() {
+        if (player != null) {
+            return player.isPlaying();
+        }
+        return false;
+    }
+
+    /**
+     * 关闭释放资源
+     */
+    public void releaseResource() {
+        if (playerView != null) {
+            playerView.onPause();
+        }
+        releasePlayer();
+    }
+
+    /**
+     * 重播
+     */
+    public void replay() {
+        clearStartPosition();
+        initializePlayer();
+        if (playerView != null) {
+            playerView.onResume();
+        }
+    }
+
     /**
      * 播放还是暂停
      */
@@ -218,6 +310,11 @@ public class ExoPlayerUtil implements DefaultLifecycleObserver {
         if (playerView == null) {
             return;
         }
+        if (mContext == null) {
+            return;
+        }
+        // 全屏按钮
+        fullScreenButton = playerView.findViewById(androidx.media3.ui.R.id.exo_fullscreen);
         if (player == null) {
             ExoPlayer.Builder playerBuilder = new ExoPlayer.Builder(mContext);
             // 直播自定义播放速度调整算法,
@@ -237,6 +334,14 @@ public class ExoPlayerUtil implements DefaultLifecycleObserver {
 //            player.setRepeatMode(Player.REPEAT_MODE_ONE);
             // 绑定视图和播放器
             playerView.setPlayer(player);
+
+            // 设置宽高比视图监听
+            playerView.setAspectRatioListener(new AspectRatioFrameLayout.AspectRatioListener() {
+                @Override
+                public void onAspectRatioUpdated(float targetAspectRatio, float naturalAspectRatio, boolean aspectRatioMismatch) {
+                    Log.d(TAG, "目标横纵比：" + targetAspectRatio + " 当前视图横纵比" + naturalAspectRatio + "横纵比是否设置：" + aspectRatioMismatch);
+                }
+            });
         }
         if (player != null) {
             boolean haveStartPosition = startItemIndex != C.INDEX_UNSET;
@@ -286,6 +391,14 @@ public class ExoPlayerUtil implements DefaultLifecycleObserver {
      * 各种监听
      */
     private class PlayerEventListener implements Player.Listener {
+
+        @OptIn(markerClass = UnstableApi.class)
+        @Override
+        public void onVideoSizeChanged(VideoSize videoSize) {
+            Player.Listener.super.onVideoSizeChanged(videoSize);
+            Log.d(TAG, ">Player.Listener videoSize :" + videoSize.toBundle());
+        }
+
         @OptIn(markerClass = UnstableApi.class)
         @Override
         public void onEvents(Player player, Player.Events events) {
@@ -296,36 +409,66 @@ public class ExoPlayerUtil implements DefaultLifecycleObserver {
         @OptIn(markerClass = UnstableApi.class)
         @Override
         public void onTimelineChanged(Timeline timeline, int reason) {
-            Player.Listener.super.onTimelineChanged(timeline, reason);
-            if (player != null) {
-                MediaItem mediaItemAt = player.getMediaItemAt(0);
-                Log.d(TAG, "媒体信息 mediaItemAt:" + mediaItemAt.toBundleIncludeLocalConfiguration().toString());
-
-                Log.d(TAG, ">Player.Listener onTimelineChanged timeline:" + timeline + " reason:" + reason
-                        + "\n "
-                        + "\n Live:" + player.isCurrentMediaItemLive()  // 指示当前正在播放的媒体项是否为直播流。即使直播已结束，此值仍然为 true。
-                        + "\n Dynamic:" + player.isCurrentMediaItemDynamic()   // 指示当前播放的媒体项是否仍在更新。对于尚未结束的直播，通常也是如此。请注意，在某些情况下，此标志也适用于非直播。
-                        + "\n offset:" + player.getCurrentLiveOffset()  //  返回当前实时与播放位置（如果有）之间的偏移量。
-                        + "\n Duration:" + player.getDuration()  //  会返回当前实时窗口的长度。
-                        + "\n Pos:" + player.getCurrentPosition()  //  返回相对于直播窗口起始位置的播放位置。
-                        + "\n MediaItem:" + player.getCurrentMediaItem().toBundleIncludeLocalConfiguration()   //  返回当前媒体内容，其中 MediaItem.liveConfiguration 包含应用为目标实时偏移量和实时偏移量调整参数提供的替换项。
-                        + "\n timeline:" + player.getCurrentTimeline().toBundle()  //  用于在 Timeline 中返回当前媒体结构。
-                        + "\n ItemIndex:" + player.getCurrentMediaItemIndex()  // 可以使用 Player.getCurrentWindowIndex 和 Timeline.getWindow 从 Timeline 检索当前 Timeline.Window。在 Window 中：
-                );
-
-//                Timeline.Window window = timeline.getWindow(player.getCurrentMediaItemIndex(), );
-//                Log.d(TAG, ">Player.Listener onTimelineChanged window "
-//                        + "\n " + window.liveConfiguration()  //  包含目标实时偏移量和实时偏移量调整参数。这些值基于媒体中的信息以及在 MediaItem.liveConfiguration 中设置的任何应用提供的替换项。
-//                        + "\n " + window.windowStartTimeMs()  //  是自 Unix Epoch 以来的时间，即实时窗口的开始时间。
-//                        + "\n " + window.getCurrentUnixTimeMs()  //  是自当前实时的 Unix 纪元以来经过的时间。可以根据服务器和客户端之间的已知时钟差值来更正此值。
-//                        + "\n " + window.getDefaultPositionMs()  //  是直播窗口中默认播放器开始播放的位置。
+//            Player.Listener.super.onTimelineChanged(timeline, reason);
+//            if (player != null) {
+//                Log.d(TAG, ">Player.Listener onTimelineChanged timeline:" + timeline + " reason:" + reason
+//                        + "\n "
+//                        + "\n Live:" + player.isCurrentMediaItemLive()  // 指示当前正在播放的媒体项是否为直播流。即使直播已结束，此值仍然为 true。
+//                        + "\n Dynamic:" + player.isCurrentMediaItemDynamic()   // 指示当前播放的媒体项是否仍在更新。对于尚未结束的直播，通常也是如此。请注意，在某些情况下，此标志也适用于非直播。
+//                        + "\n offset:" + player.getCurrentLiveOffset()  //  返回当前实时与播放位置（如果有）之间的偏移量。
+//                        + "\n Duration:" + player.getDuration()  //  会返回当前实时窗口的长度。
+//                        + "\n Pos:" + player.getCurrentPosition()  //  返回相对于直播窗口起始位置的播放位置。
+//                        + "\n MediaItem:" + player.getCurrentMediaItem().toBundleIncludeLocalConfiguration()   //  返回当前媒体内容，其中 MediaItem.liveConfiguration 包含应用为目标实时偏移量和实时偏移量调整参数提供的替换项。
+//                        + "\n timeline:" + player.getCurrentTimeline().toBundle()  //  用于在 Timeline 中返回当前媒体结构。
+//                        + "\n ItemIndex:" + player.getCurrentMediaItemIndex()  // 可以使用 Player.getCurrentWindowIndex 和 Timeline.getWindow 从 Timeline 检索当前 Timeline.Window。在 Window 中：
 //                );
+//
+////                Timeline.Window window = timeline.getWindow(player.getCurrentMediaItemIndex(), );
+////                Log.d(TAG, ">Player.Listener onTimelineChanged window "
+////                        + "\n " + window.liveConfiguration()  //  包含目标实时偏移量和实时偏移量调整参数。这些值基于媒体中的信息以及在 MediaItem.liveConfiguration 中设置的任何应用提供的替换项。
+////                        + "\n " + window.windowStartTimeMs()  //  是自 Unix Epoch 以来的时间，即实时窗口的开始时间。
+////                        + "\n " + window.getCurrentUnixTimeMs()  //  是自当前实时的 Unix 纪元以来经过的时间。可以根据服务器和客户端之间的已知时钟差值来更正此值。
+////                        + "\n " + window.getDefaultPositionMs()  //  是直播窗口中默认播放器开始播放的位置。
+////                );
+//            }
+        }
+
+        @Override
+        public void onPlaybackStateChanged(int playbackState) {
+            Log.d(TAG, ">Player.Listener onPlaybackStateChanged:" + playbackState);
+            switch (playbackState) {
+                case Player.STATE_IDLE:       // 加载播放
+                case Player.STATE_BUFFERING:       // 加载播放
+                    if (playStateChangedListener != null) {
+                        playStateChangedListener.onStateBuffering();
+                    }
+                    if (loadingView != null) {
+                        loadingView.setVisibility(View.VISIBLE);
+                    }
+                    break;
+                case Player.STATE_READY:   // 加载准备播放
+                    if (playStateChangedListener != null) {
+                        playStateChangedListener.onStateReady();
+                    }
+                    if (loadingView != null) {
+                        loadingView.setVisibility(View.GONE);
+                    }
+                    break;
+                case Player.STATE_ENDED:  // 播放结束
+                    if (playStateChangedListener != null) {
+                        playStateChangedListener.onStateEnded();
+                    }
+                    break;
+
             }
         }
 
         @Override
         public void onPlayerError(PlaybackException error) {
             Log.d(TAG, ">Player.Listener onPlayerError:" + error.errorCode);
+            if (playStateChangedListener != null) {
+                playStateChangedListener.onStateError();
+            }
             if (error.errorCode == PlaybackException.ERROR_CODE_BEHIND_LIVE_WINDOW) {
                 // 直播状态异常，恢复直播位置重新准备
                 if (player != null) {
@@ -333,6 +476,19 @@ public class ExoPlayerUtil implements DefaultLifecycleObserver {
                     player.prepare();
                 }
             }
+        }
+
+        @Override
+        public void onIsPlayingChanged(boolean isPlaying) {
+            Log.d(TAG, ">Player.Listener onIsPlayingChanged:" + isPlaying);
+            if (playStateChangedListener != null) {
+                playStateChangedListener.onIsPlayingChanged(isPlaying);
+            }
+        }
+
+        @Override
+        public void onIsLoadingChanged(boolean isLoading) {
+            Log.d(TAG, ">Player.Listener onIsLoadingChanged:" + isLoading);
         }
     }
 
@@ -348,56 +504,6 @@ public class ExoPlayerUtil implements DefaultLifecycleObserver {
         }
     }
 
-
-    /**
-     * 添加播放状态
-     */
-    public void addPlayerState(View loadingView, View EndView) {
-        if (player != null) {
-            player.addListener(new Player.Listener() {
-                @Override
-                public void onIsPlayingChanged(boolean isPlaying) {
-                    Log.d(TAG, ">Player.Listener onIsPlayingChanged 是否播放暂停:" + isPlaying);
-                }
-
-                @Override
-                public void onIsLoadingChanged(boolean isLoading) {
-                    Log.d(TAG, ">Player.Listener onIsLoadingChanged:" + isLoading);
-                    if (isLoading) {
-                        if (loadingView != null) {
-                            loadingView.setVisibility(View.VISIBLE);
-                        }
-                    } else {
-                        if (loadingView != null) {
-                            loadingView.setVisibility(View.GONE);
-                        }
-                    }
-                }
-
-                @Override
-                public void onPlaybackStateChanged(int playbackState) {
-                    Log.d(TAG, ">Player.Listener onPlaybackStateChanged:" + playbackState);
-                    switch (playbackState) {
-                        case Player.STATE_IDLE:       // 开始播放
-                        case Player.STATE_BUFFERING:       // 开始播放
-                        case Player.STATE_READY:   // 加载准备播放
-                            if (EndView != null) {
-                                EndView.setVisibility(View.GONE);
-                            }
-                            break;
-
-                        case Player.STATE_ENDED:  // 播放结束
-                            if (EndView != null) {
-                                EndView.setVisibility(View.VISIBLE);
-                            }
-                            break;
-
-                    }
-                }
-            });
-        }
-    }
-
     /**
      * 设置是否自动播放
      *
@@ -405,5 +511,22 @@ public class ExoPlayerUtil implements DefaultLifecycleObserver {
      */
     public void setStartAutoPlay(boolean startAutoPlay) {
         this.startAutoPlay = startAutoPlay;
+    }
+
+    public void setPlayStateChangedListener(PlayStateChangedListener playStateChangedListener) {
+        this.playStateChangedListener = playStateChangedListener;
+    }
+
+    /**
+     * 全部状态点击
+     */
+    public void setFullScreenButtonClicked() {
+        if (fullScreenButton != null) {
+            fullScreenButton.performClick();
+        }
+    }
+
+    public void setLoadingView(View loadingView) {
+        this.loadingView = loadingView;
     }
 }

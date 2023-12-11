@@ -34,6 +34,7 @@ import androidx.media3.ui.PlayerView;
 
 import com.example.zzt.sampleexomedia3.R;
 import com.example.zzt.sampleexomedia3.util.ExoPlayerUtil;
+import com.example.zzt.sampleexomedia3.view.ZAspectRatioFrameLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -92,28 +93,28 @@ public class ActExo extends AppCompatActivity {
             }
         });
 
-//        playerView.setControllerVisibilityListener(new PlayerView.ControllerVisibilityListener() {
-//            @Override
-//            public void onVisibilityChanged(int visibility) {
-//                Log.d(TAG, "> setControllerVisibilityListener onVisibilityChanged:" + visibility);
-//            }
-//        });
-//        playerView.setErrorMessageProvider(new ErrorMessageProvider<PlaybackException>() {
-//            @Override
-//            public Pair<Integer, String> getErrorMessage(PlaybackException throwable) {
-//                Log.e(TAG, "> PlaybackException " + throwable);
-//                return new Pair<>(9999, "这是什么错误");
-//            }
-//        });
-//        playerView.requestFocus();
+        playerView.setControllerVisibilityListener(new PlayerView.ControllerVisibilityListener() {
+            @Override
+            public void onVisibilityChanged(int visibility) {
+                Log.d(TAG, "> setControllerVisibilityListener onVisibilityChanged:" + visibility);
+            }
+        });
+        playerView.setErrorMessageProvider(new ErrorMessageProvider<PlaybackException>() {
+            @Override
+            public Pair<Integer, String> getErrorMessage(PlaybackException throwable) {
+                Log.e(TAG, "> PlaybackException " + throwable);
+                return new Pair<>(9999, "这是什么错误");
+            }
+        });
+        playerView.requestFocus();
 
         // 设置全屏按钮显示
-//        playerView.setFullscreenButtonClickListener(new PlayerView.FullscreenButtonClickListener() {
-//            @Override
-//            public void onFullscreenButtonClick(boolean isFullScreen) {
-//                Log.d(TAG, "> setFullscreenButtonClickListener onFullscreenButtonClick:" + isFullScreen);
-//            }
-//        });
+        playerView.setFullscreenButtonClickListener(new PlayerView.FullscreenButtonClickListener() {
+            @Override
+            public void onFullscreenButtonClick(boolean isFullScreen) {
+                Log.d(TAG, "> setFullscreenButtonClickListener onFullscreenButtonClick:" + isFullScreen);
+            }
+        });
 
         exoPlayerUtil = new ExoPlayerUtil(this, playerView);
         getLifecycle().addObserver(exoPlayerUtil);
@@ -135,6 +136,9 @@ public class ActExo extends AppCompatActivity {
                 }
             }
         });
+
+//        ZAspectRatioFrameLayout viewById1 = findViewById(R.id.zarf_auto);
+//        viewById1.setAspectRatio(1F);
     }
 
     @Override
@@ -164,19 +168,19 @@ public class ActExo extends AppCompatActivity {
 
     @OptIn(markerClass = UnstableApi.class)
     private List<MediaItem> createMediaItems() {
-        MediaItem mediaItem6 = MediaItem.fromUri("https://6dee75c44c91925f5f306fd05ae36ba8.h2.smtcdns.net/pull-flv-l11.douyincdn.com/third/stream-114207517177545180_or4.flv?expire=1702435702&sign=7f2c5ea42db8a852d4cdd4c6236e2ad1&abr_pts=-800&_session_id=037-20231206104821E669BBCD058DF6C487E0.1701830902850.65886&TxLiveCode=cold_stream&TxDispType=3&svr_type=live_oc&tencent_test_client_ip=58.33.120.163&dispatch_from=OC_MGR60.188.95.104&utime=1701830903066");
-        MediaItem mediaItem5 = new MediaItem.Builder().setUri("http://live-xtrend.thextrend.com/Daramola/Daramola.flv?auth_key=1701773161033-0-0-358c3e082a657d56592ee5c6a8c09342").build();
-        MediaItem mediaItem3 = new MediaItem.Builder().setUri("https://oss.xtrendspeed.com/video/classRoom/how_use_credit-cn.mp4").setMediaMetadata(new MediaMetadata.Builder().setTitle("如何使用奖励金").build()).setMimeType(MimeTypes.VIDEO_MP4).build();
-        MediaItem mediaItem4 = new MediaItem.Builder().setUri("https://oss.xtrendspeed.com/video/classRoom/about_you-cn.mp4").setMediaMetadata(new MediaMetadata.Builder().setTitle("如何使用奖励金").build()).setMimeType(MimeTypes.VIDEO_MP4).build();
-        MediaItem mediaItem1 = new MediaItem.Builder().setUri("https://html5demos.com/assets/dizzy.mp4").setMediaMetadata(new MediaMetadata.Builder().setTitle("MP4 (480x360): Dizzy (H264/aac)").build()).setMimeType(MimeTypes.VIDEO_MP4).build();
-        MediaItem mediaItem2 = new MediaItem.Builder().setUri("https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_16x9/bipbop_16x9_variant.m3u8").setMediaMetadata(new MediaMetadata.Builder().setTitle("HLS (adaptive): Apple 16x9 basic stream (TS/h264/aac)").build()).setMimeType(MimeTypes.APPLICATION_M3U8).build();
         List<MediaItem> mediaItems = new ArrayList<>();
-        mediaItems.add(mediaItem6);
-        mediaItems.add(mediaItem5);
-        mediaItems.add(mediaItem3);
-        mediaItems.add(mediaItem4);
-        mediaItems.add(mediaItem1);
-        mediaItems.add(mediaItem2);
+        mediaItems.add(new MediaItem.Builder().setUri("https://oss.xtrendspeed.com/video/classRoom/how_use_credit-cn.mp4").setMediaMetadata(new MediaMetadata.Builder().setTitle("如何使用奖励金").build()).setMimeType(MimeTypes.VIDEO_MP4).build());
+        mediaItems.add(MediaItem.fromUri("rtmp://live-xtrend.thextrend.com/Daramola/Daramola?auth_key=1702031401015-0-0-fc6f058bae783279249cb36f6ed05797"));
+        mediaItems.add(MediaItem.fromUri("https://xy61x147x214x6xy.mcdn.bilivideo.cn:486/live-bvc/161918/live_442201140_30256294_1500/index.m3u8?expires=1702005870&len=0&oi=975272099&pt=web&qn=0&trid=10078049d95aa2da422c982f3b1c4efa8b36&sigparams=cdn,expires,len,oi,pt,qn,trid&cdn=cn-gotcha16&sign=daa2b1d912081e083d06eb1ec2751ea2&sk=f3edee0d0b70b2dffe8f5aa90c7cb899&flvsk=49b2297e01227757bd727ae747094164&p2p_type=1&sl=2&free_type=0&mid=0&sid=mcdn-jkwl-jsyz-ct-2003574&chash=0&bmt=1&sche=ban&bvchls=1&score=14&pp=srt&source=onetier&trace=91&site=5441d70a2190327d0336f2fd8caf77e3&zoneid_l=151355393&sid_l=live_442201140_30256294_1500&order=1"));
+        mediaItems.add(MediaItem.fromUri("rtmp://live-xtrend.thextrend.com/Daramola/Daramola?auth_key=1701945721012-0-0-3819332f10e984190dfec2a347ba9089"));
+        mediaItems.add(MediaItem.fromUri("http://live-xtrend.thextrend.com/Daramola/Daramola.flv?auth_key=1701946020900-0-0-3725eaed0a3efac99c0d631194e80ce8"));
+        mediaItems.add(MediaItem.fromUri("https://6dee75c44c91925f5f306fd05ae36ba8.h2.smtcdns.net/pull-flv-l11.douyincdn.com/third/stream-114207517177545180_or4.flv?expire=1702435702&sign=7f2c5ea42db8a852d4cdd4c6236e2ad1&abr_pts=-800&_session_id=037-20231206104821E669BBCD058DF6C487E0.1701830902850.65886&TxLiveCode=cold_stream&TxDispType=3&svr_type=live_oc&tencent_test_client_ip=58.33.120.163&dispatch_from=OC_MGR60.188.95.104&utime=1701830903066"));
+        mediaItems.add(new MediaItem.Builder().setUri("https://6dee75c44c91925f5f306fd05ae36ba8.h2.smtcdns.net/pull-flv-l11.douyincdn.com/third/stream-114207517177545180_or4.flv?expire=1702435702&sign=7f2c5ea42db8a852d4cdd4c6236e2ad1&abr_pts=-800&_session_id=037-20231206104821E669BBCD058DF6C487E0.1701830902850.65886&TxLiveCode=cold_stream&TxDispType=3&svr_type=live_oc&tencent_test_client_ip=58.33.120.163&dispatch_from=OC_MGR60.188.95.104&utime=1701830903066").build());
+        mediaItems.add(new MediaItem.Builder().setUri("http://live-xtrend.thextrend.com/Daramola/Daramola.flv?auth_key=1701773161033-0-0-358c3e082a657d56592ee5c6a8c09342").build());
+        mediaItems.add(new MediaItem.Builder().setUri("https://oss.xtrendspeed.com/video/classRoom/about_you-cn.mp4").setMediaMetadata(new MediaMetadata.Builder().setTitle("如何使用奖励金").build()).setMimeType(MimeTypes.VIDEO_MP4).build());
+        mediaItems.add(new MediaItem.Builder().setUri("https://html5demos.com/assets/dizzy.mp4").setMediaMetadata(new MediaMetadata.Builder().setTitle("MP4 (480x360): Dizzy (H264/aac)").build()).setMimeType(MimeTypes.VIDEO_MP4).build());
+        mediaItems.add(new MediaItem.Builder().setUri("https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_16x9/bipbop_16x9_variant.m3u8").setMediaMetadata(new MediaMetadata.Builder().setTitle("HLS (adaptive): Apple 16x9 basic stream (TS/h264/aac)").build()).setMimeType(MimeTypes.APPLICATION_M3U8).build());
+
         return mediaItems;
     }
 

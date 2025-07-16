@@ -1,6 +1,9 @@
-package com.example.zzt.sampleexomedia3.frag;
+package com.example.zzt.sampleexomedia3.oneplay;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -10,33 +13,20 @@ import androidx.media3.common.MediaMetadata;
 import androidx.media3.common.MimeTypes;
 import androidx.media3.ui.PlayerView;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
 import com.example.zzt.sampleexomedia3.R;
 import com.example.zzt.sampleexomedia3.util.ExoPlayerUtil;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link AFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class AFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+public class BFragment extends Fragment {
+
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     private PlayerView player_view_1;
     private ExoPlayerUtil exoPlayerUtil;
 
-    public AFragment() {
+    public BFragment() {
         // Required empty public constructor
     }
 
@@ -49,8 +39,8 @@ public class AFragment extends Fragment {
      * @return A new instance of fragment AFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static AFragment newInstance(String param1, String param2) {
-        AFragment fragment = new AFragment();
+    public static BFragment newInstance(String param1, String param2) {
+        BFragment fragment = new BFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -61,16 +51,11 @@ public class AFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_a, container, false);
     }
 

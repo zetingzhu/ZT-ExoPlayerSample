@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#91C2F2B3"
+    android:orientation="vertical">
+
+    <androidx.media3.ui.PlayerView
+        android:id="@+id/player_view_one"
+        android:layout_width="match_parent"
+        android:layout_height="300dp" />
+
+    <Button
+        android:id="@+id/btn_play_one"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="播放第一个视频" />
+
+    <Button
+        android:id="@+id/btn_to_two"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="去第二个页面" />
+
+</LinearLayout>

@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -24,6 +25,9 @@ import androidx.annotation.Nullable;
 import androidx.annotation.OptIn;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.media3.common.ErrorMessageProvider;
 import androidx.media3.common.MediaItem;
 import androidx.media3.common.MediaMetadata;
@@ -33,6 +37,7 @@ import androidx.media3.common.util.UnstableApi;
 import androidx.media3.ui.PlayerView;
 
 import com.example.zzt.sampleexomedia3.R;
+import com.example.zzt.sampleexomedia3.oneplay.OnePlayAct;
 import com.example.zzt.sampleexomedia3.util.ExoPlayerUtil;
 import com.example.zzt.sampleexomedia3.view.ZAspectRatioFrameLayout;
 
@@ -55,7 +60,15 @@ public class ActExo extends AppCompatActivity {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_act_exo);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            // 竖屏
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            // 横屏  Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
 
         videoLocalFilePickerLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), this::videoLocalFilePickerLauncherResult);
 
@@ -137,8 +150,12 @@ public class ActExo extends AppCompatActivity {
             }
         });
 
-//        ZAspectRatioFrameLayout viewById1 = findViewById(R.id.zarf_auto);
-//        viewById1.setAspectRatio(1F);
+        findViewById(R.id.btn_one).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                OnePlayAct.start(v.getContext());
+            }
+        });
     }
 
     @Override

@@ -2,9 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FABD06"
+    android:background="#63FABD06"
     android:orientation="vertical"
     tools:context=".act.ActExo">
 
@@ -39,7 +40,8 @@
                 android:id="@+id/btn_frag"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="进入Fragment" />
+                android:text="进入Fragment"
+                android:textAllCaps="false" />
 
             <com.example.zzt.sampleexomedia3.view.AppLoadingLayoutLive
                 android:id="@+id/ll_load"
@@ -80,6 +82,14 @@
         app:player_layout_id="@layout/exo_player_view_v2"
         app:show_buffering="always"
         app:use_controller="true" />
+
+
+    <Button
+        android:id="@+id/btn_one"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="单播放源测试"
+        android:textAllCaps="false" />
 
 
 </LinearLayout>

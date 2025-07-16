@@ -6,6 +6,9 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
 
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -24,6 +27,29 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <service
+            android:name=".oneplay.PlayerService"
+            android:exported="true"
+            android:foregroundServiceType="mediaPlayback">
+            <intent-filter>
+                <action android:name="androidx.media3.session.MediaSessionService" />
+                <action android:name="android.media.browse.MediaBrowserService" />
+                <!-- 如果你想通过特定 action 启动 Service 播放，可以添加 -->
+                <action android:name="com.example.zzt.sampleexomedia3.oneplay.ACTION_PLAY_VIDEO" />
+            </intent-filter>
+        </service>
+
+        <activity
+            android:name=".oneplay.OnePlayAct"
+            android:exported="true">
+
+        </activity>
+        <activity
+            android:name=".oneplay.TwoPlayAct"
+            android:exported="true">
+
         </activity>
     </application>
 

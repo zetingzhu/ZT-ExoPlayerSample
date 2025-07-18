@@ -40,20 +40,25 @@ class PlayerService : MediaSessionService() {
         super.onCreate()
         player = ExoPlayer.Builder(this)
             .build()
-            // 可选：添加日志或状态监听器
             .apply {
+                playWhenReady = true // 始终保持 play 状态，防止 Surface 丢失时自动暂停
                 addListener(object : Player.Listener {
                     override fun onPlaybackStateChanged(playbackState: Int) {
-                        // 可以根据播放状态更新通知等
                         if (playbackState == Player.STATE_ENDED) {
                             // 视频播放结束时的处理
+                        }
+                    }
+                    override fun onIsPlayingChanged(isPlaying: Boolean) {
+                        if (!isPlaying && playWhenReady && player.playbackState == Player.STATE_READY) {
+                            player.playWhenReady = true
                         }
                     }
                 })
             }
 
         mediaSession = MediaSession.Builder(this, player)
-            .setCallback(MyMediaSessionCallback()) // 设置回调以处理自定义命令等
+            .setId("oneplay_session") // 保证 sessionId 唯一
+            .setCallback(MyMediaSessionCallback())
             .build()
     }
 

@@ -5,7 +5,6 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
-
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
 
@@ -17,16 +16,22 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ZTExoPlayerSample">
         <activity
-            android:name=".act.ExoFragAct"
-            android:exported="false" />
-        <activity
-            android:name=".act.ActExo"
-            android:exported="true">
+            android:name=".ZtExoAct"
+            android:exported="true"
+            android:label="@string/title_activity_zt_exo">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".act.ExoFragAct"
+            android:exported="false" />
+        <activity
+            android:name=".act.ActExo"
+            android:exported="true">
+
         </activity>
 
         <service
@@ -43,14 +48,26 @@
 
         <activity
             android:name=".oneplay.OnePlayAct"
-            android:exported="true">
-
-        </activity>
+            android:exported="true" />
         <activity
             android:name=".oneplay.TwoPlayAct"
-            android:exported="true">
+            android:exported="true" />
+        <activity android:name=".twoplay.PlayAActivity" />
+        <activity android:name=".twoplay.PlayBActivity" />
 
-        </activity>
+        <service
+            android:name=".threeplay.ThreePlayerService"
+            android:exported="true"
+            android:foregroundServiceType="mediaPlayback">
+            <intent-filter>
+                <action android:name="androidx.media3.session.MediaSessionService" />
+                <action android:name="android.media.browse.MediaBrowserService" />
+                <action android:name="com.example.zzt.sampleexomedia3.threeplay.ACTION_PLAY_VIDEO" />
+            </intent-filter>
+        </service>
+
+        <activity android:name=".threeplay.PageCActivity" />
+        <activity android:name=".threeplay.PageDActivity" />
     </application>
 
 </manifest>

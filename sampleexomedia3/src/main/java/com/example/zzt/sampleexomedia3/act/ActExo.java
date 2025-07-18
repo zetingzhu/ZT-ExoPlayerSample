@@ -5,6 +5,7 @@ import static android.Manifest.permission.READ_MEDIA_VIDEO;
 import static androidx.media3.common.util.Assertions.checkNotNull;
 import static androidx.media3.common.util.Util.SDK_INT;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -38,6 +39,8 @@ import androidx.media3.ui.PlayerView;
 
 import com.example.zzt.sampleexomedia3.R;
 import com.example.zzt.sampleexomedia3.oneplay.OnePlayAct;
+import com.example.zzt.sampleexomedia3.threeplay.PageCActivity;
+import com.example.zzt.sampleexomedia3.twoplay.PlayAActivity;
 import com.example.zzt.sampleexomedia3.util.ExoPlayerUtil;
 import com.example.zzt.sampleexomedia3.view.ZAspectRatioFrameLayout;
 
@@ -55,6 +58,11 @@ public class ActExo extends AppCompatActivity {
     private ActivityResultLauncher<Intent> videoLocalFilePickerLauncher;
     public static final int FILE_PERMISSION_REQUEST_CODE = 1;
     private Uri localFileUri;
+
+    public static void start(Context context) {
+        Intent starter = new Intent(context, ActExo.class);
+        context.startActivity(starter);
+    }
 
     @OptIn(markerClass = UnstableApi.class)
     @Override
@@ -154,6 +162,19 @@ public class ActExo extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 OnePlayAct.start(v.getContext());
+            }
+        });
+
+        findViewById(R.id.btn_two).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PlayAActivity.start(v.getContext());
+            }
+        });
+        findViewById(R.id.btn_three).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PageCActivity.start(v.getContext());
             }
         });
     }

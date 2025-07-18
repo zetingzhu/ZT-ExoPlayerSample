@@ -91,7 +91,8 @@ class OnePlayAct : AppCompatActivity() {
         super.onStop()
         // 将 PlayerView 与 Player 解绑，允许其他 Activity 的 PlayerView 接管
         playerView?.player = null
-        releaseMediaController()
+        // 不再在 onStop 释放 MediaController，避免切换页面时视频被暂停
+        // releaseMediaController() // 注释掉
     }
 
 
@@ -103,15 +104,9 @@ class OnePlayAct : AppCompatActivity() {
                 // MediaController 准备就绪
                 val controller = this.mediaController
                 if (controller != null) {
-                    playerView?.player = controller // 将 Service 中的 Player 设置给当前页面的 PlayerView
-
-                    if (controller.mediaItemCount > 0 && controller.playbackState == Player.STATE_IDLE) {
-                        // 如果有媒体项但处于空闲状态 (例如 prepare 之后没有 play)
-                        controller.prepare()
-                        controller.play()
-                    }
+                    playerView?.player = controller // 只绑定，不主动 prepare/play，交由 Service 控制
                 }
-            }, ContextCompat.getMainExecutor(this) // 或者 MoreExecutors.directExecutor() 如果回调很快
+            }, ContextCompat.getMainExecutor(this)
         )
     }
 
@@ -124,7 +119,6 @@ class OnePlayAct : AppCompatActivity() {
 
     protected fun playNewVideo(videoUrl: String) {
         val controller = this.mediaController ?: return
-
         controller.setMediaItem(MediaItem.fromUri(videoUrl))
         controller.prepare()
         controller.play()

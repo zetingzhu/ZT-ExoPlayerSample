@@ -67,7 +67,8 @@ class TwoPlayAct : AppCompatActivity() {
     override fun onStop() {
         super.onStop()
         playerView?.player = null
-        releaseMediaController()
+        // 不再在 onStop 释放 MediaController，避免切换页面时视频被暂停
+        // releaseMediaController() // 注释掉
     }
 
     private fun initializeMediaController() {
@@ -77,12 +78,10 @@ class TwoPlayAct : AppCompatActivity() {
             {
                 val controller = this.mediaController
                 if (controller != null) {
-                    playerView?.player = controller // 将 Service 中的 Player 设置给当前页面的 PlayerView
-                    controller.prepare()
-                    controller.play()
+                    playerView?.player = controller // 只绑定，不主动 prepare/play，交由 Service 控制
                 }
             },
-            ContextCompat.getMainExecutor(this) // 或者 MoreExecutors.directExecutor() 如果回调很快
+            ContextCompat.getMainExecutor(this)
         )
     }
 
